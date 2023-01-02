@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework', 'rest_framework.authtoken',
-    'user'
+    'auth_control', 'record'
 ]
 
 MIDDLEWARE = [
@@ -128,11 +128,11 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'auth_control.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'coleery.Mixins.authentication._TokenAuthentication',
+        'orsig.helpers.authentication._TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',

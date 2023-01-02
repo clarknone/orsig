@@ -11,6 +11,11 @@ from django.utils.timezone import now
 from orsig.helpers.generators import Generator
 
 
+class IEmailField(models.EmailField):
+    def get_prep_value(self, value):
+        return str(value).lower()
+
+
 def get_avatar_path(instance, filename):
     filename, file_extension = os.path.splitext(filename)
     return "userfiles/%s/avatar/%s.%s" % (instance.hash, secrets.token_hex(32), file_extension)
@@ -44,7 +49,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.PositiveIntegerField(default=Generator.generate_pk, primary_key=True)
-    email = models.EmailField(max_length=127, unique=True, validators=[validate_email])
+    email = IEmailField(max_length=127, unique=True, validators=[validate_email])
     full_name = models.CharField(default='', blank=True, max_length=32)
     phone = models.CharField(max_length=32, blank=True, default=None, null=True)
     avatar = models.ImageField(upload_to=get_avatar_path, null=True, default=None, blank=True, max_length=256)
