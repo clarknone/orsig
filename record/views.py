@@ -49,7 +49,6 @@ class CommitsView(ListCreateAPIView):
     def perform_create(self, serializer):
         record_id = serializer.validated_data['record_id']
         commit_hash = serializer.validated_data['commit_hash']
-        print(commit_hash)
         try:
             record = models.Record.objects.get(id=record_id)
             if record.user != self.request.user:
