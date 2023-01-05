@@ -38,7 +38,7 @@ class RecordSingleView(RetrieveUpdateDestroyAPIView):
 
 class CommitsView(ListCreateAPIView):
     serializer_class = serializers.CommitSerializer
-    models = models.Commit
+    model = models.Commit
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):

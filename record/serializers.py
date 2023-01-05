@@ -13,5 +13,5 @@ class CommitSerializer(serializers.ModelSerializer):
     record_id = serializers.IntegerField(write_only=True, required=True)
 
     class Meta:
-        fields = ['previous_hash', 'hash', 'record_id', 'commit_hash', 'title', 'description', 'id', 'language']
+        fields = ['previous_hash', 'hash', 'record_id', 'date', 'commit_hash', 'title', 'description', 'id', 'language']
         model = models.Commit
