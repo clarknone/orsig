@@ -27,7 +27,7 @@ class Commit(models.Model):
     description = models.CharField(max_length=512, blank=True)
     language = models.CharField(default="", max_length=255, blank=True)
     date_created = models.DateTimeField()
-    date = models.DateTimeField()
+    date = models.DateTimeField(blank=True)
     previous_hash = models.CharField(max_length=255, blank=True)
     commit_hash = models.CharField(max_length=255)
     hash = models.CharField(max_length=255, blank=True)

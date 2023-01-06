@@ -15,7 +15,7 @@ class RecordsView(ListCreateAPIView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return self.model.objects.filter(user=self.request.user, is_committed=False).order_by('-date')
+            return self.model.objects.filter(user=self.request.user, is_committed=False).order_by('-date_created')
         return self.model.objects.filter(is_committed=False).order_by('-date_created')
 
     def perform_create(self, serializer):
