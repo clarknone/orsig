@@ -2,6 +2,8 @@ from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+from orsig.helpers.pagination import StandardResultsSetPagination
 from record import serializers, models
 from record.services import create_new_commit
 
@@ -11,6 +13,7 @@ from record.services import create_new_commit
 class RecordsView(ListCreateAPIView):
     serializer_class = serializers.RecordSerializer
     model = models.Record
+    pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
@@ -40,6 +43,7 @@ class CommitsView(ListCreateAPIView):
     serializer_class = serializers.CommitSerializer
     model = models.Commit
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
