@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 from orsig.helpers.pagination import StandardResultsSetPagination
 from record import serializers, models
@@ -14,12 +14,10 @@ class RecordsView(ListCreateAPIView):
     serializer_class = serializers.RecordSerializer
     model = models.Record
     pagination_class = StandardResultsSetPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return self.model.objects.filter(user=self.request.user, is_committed=False).order_by('-date_created')
-        return self.model.objects.filter(is_committed=False).order_by('-date_created')
+        return self.model.objects.filter(user=self.request.user, is_committed=False).order_by('-date_created')
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
@@ -28,11 +26,11 @@ class RecordsView(ListCreateAPIView):
 class RecordSingleView(RetrieveUpdateDestroyAPIView):
     models = models.Record
     serializer_class = serializers.RecordSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     lookup_field = "id"
 
     def get_queryset(self):
-        return self.models.objects.filter(is_committed=False).order_by('-date_created')
+        return self.models.objects.filter(user=self.request.user, is_committed=False).order_by('-date_created')
 
     def check_object_permissions(self, request, obj):
         if obj.user != request.user and request.methods not in ('GET', 'HEAD', 'OPTIONS'):
@@ -42,13 +40,11 @@ class RecordSingleView(RetrieveUpdateDestroyAPIView):
 class CommitsView(ListCreateAPIView):
     serializer_class = serializers.CommitSerializer
     model = models.Commit
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return self.model.objects.filter(user=self.request.user).order_by('-date')
-        return self.model.objects.filter().order_by('-date')
+        return self.model.objects.filter(user=self.request.user).order_by('-date')
 
     def perform_create(self, serializer):
         record_id = serializer.validated_data['record_id']
