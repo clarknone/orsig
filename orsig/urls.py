@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('record/', include('record.urls')),
     path('auth/', include('auth_control.urls')),
+    path('quote/', include('quote.urls')),
 ]
