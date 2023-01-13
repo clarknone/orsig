@@ -2,6 +2,8 @@ from django.utils.timezone import now
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+
+from orsig.helpers.pagination import StandardResultsSetPagination
 from . import models
 from . import serializers
 
@@ -19,9 +21,13 @@ class QuoteList(ListCreateAPIView):
     serializer_class = serializers.QuoteSerializer
     permission_classes = [IsAuthenticated]
     model = models.QuoteModel
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        return models.QuoteModel.objects.filter(user=self.request.user)
+        return models.QuoteModel.objects.filter(user=self.request.user).order_by("-date")
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
 
 
 class QuoteSingle(RetrieveUpdateDestroyAPIView):
